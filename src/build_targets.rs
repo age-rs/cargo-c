@@ -68,7 +68,7 @@ impl BuildTargets {
         use_meson_naming_convention: bool,
     ) -> anyhow::Result<BuildTargets> {
         let pc = targetdir.join(format!("{}.pc", &capi_config.pkg_config.filename));
-        let include = if capi_config.header.enabled {
+        let include = if capi_config.header.enabled && capi_config.header.generation {
             let mut header_name = PathBuf::from(&capi_config.header.name);
             header_name.set_extension("h");
             Some(targetdir.join(&header_name))
@@ -96,7 +96,7 @@ impl BuildTargets {
                 let shared_lib = targetdir.join(format!("lib{lib_name}.so"));
                 (shared_lib, static_lib, None, None, None)
             }
-            ("macos", _) | ("ios", _) | ("tvos", _) => {
+            ("macos", _) | ("ios", _) | ("tvos", _) | ("visionos", _) => {
                 let static_lib = targetdir.join(format!("lib{lib_name}.a"));
                 let shared_lib = targetdir.join(format!("lib{lib_name}.dylib"));
                 (shared_lib, static_lib, None, None, None)
